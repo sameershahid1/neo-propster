@@ -1,8 +1,6 @@
 local M = {}
 
-local commands = require("lua.propster.commands")
-local http = require("socket.http")
-
+local commands = require("propster.commands")
 
 function M.setup_commands()
     vim.api.nvim_create_user_command(
@@ -39,5 +37,3 @@ function M.setup_commands()
 end
 
 return M
-
-

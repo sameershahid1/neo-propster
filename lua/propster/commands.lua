@@ -4,7 +4,6 @@ local https = require("ssl.https")
 local json = require("dkjson") -- For JSON encoding
 local ltn12 = require("ltn12") -- For source and sink handling
 
-
 --local conversation_history = {}
 local windows_list = {}
 local is_close = true

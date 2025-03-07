@@ -1,0 +1,19 @@
+{
+    "/home/path/": {
+        "chats": [
+            {
+                "contents": {
+                    "role": "user",
+                    "parts": {
+                        "text": ""
+                    }
+                },
+                "latestResult": [
+                    {
+                        "parts": []
+                    }
+                ]
+            }
+        ]
+    }
+}

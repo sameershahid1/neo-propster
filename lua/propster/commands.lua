@@ -8,6 +8,14 @@ local ltn12 = require("ltn12") -- For source and sink handling
 local windows_list = {}
 local is_close = true
 
+-- Define the URL
+local api_key = "AIzaSyCEL1gMB3WhZVXPjtFOedl-DT_X0OIv0xI"
+local url =
+    "https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash-thinking-exp-01-21:generateContent?key=" ..
+    api_key
+
+
+
 local function create_parent_window()
     local screen_width = vim.o.columns
     local screen_height = vim.o.lines
@@ -85,12 +93,17 @@ function M.processing_prompt(input_buf, output_buf)
     local input = vim.api.nvim_buf_get_lines(input_buf, 0, -1, false)
     local window_text = table.concat(input, "\n")
 
-    local api_key = "AIzaSyCEL1gMB3WhZVXPjtFOedl-DT_X0OIv0xI"
-
     -- Check if the API key is the default (optional, based on your script)
     if api_key == "YOUR_DEFAULT_API_KEY" then
         print("Warning: Using default API key. Please set your own API_KEY.")
     end
+
+    local promptTemplate = [[
+      Act as an expert Golang and MongoDB developer. Generate optimized, production-ready code in Go without explanations, comments, or additional descriptions.
+      Task: %s.
+      Output: Only return the Go code in a clean and formatted manner, without any extra text.
+    ]]
+    local newPrompt = string.format(promptTemplate, window_text)
 
     -- Create the payload
     local payload = {
@@ -99,16 +112,16 @@ function M.processing_prompt(input_buf, output_buf)
                 role = "user",
                 parts = {
                     {
-                        text = window_text
+                        text = newPrompt
                     }
                 }
             }
         },
         generationConfig = {
-            temperature = 1,
-            topK = 40,
-            topP = 0.95,
-            maxOutputTokens = 8192,
+            temperature = 0.1,
+            topK = 70,
+            topP = 0.85,
+            maxOutputTokens = 2500,
             responseMimeType = "text/plain"
         }
     }
@@ -116,10 +129,6 @@ function M.processing_prompt(input_buf, output_buf)
     -- Encode the payload into JSON
     local json_payload = json.encode(payload)
 
-    -- Define the URL
-    local url =
-        "https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash-thinking-exp-1219:generateContent?key=" ..
-        api_key
 
     -- Make the POST request
     local response_body = {}
